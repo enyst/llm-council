@@ -81,12 +81,16 @@ const generateReview = async (reviewerId: string, originalModelId: string, origi
   const model = AVAILABLE_MODELS.find(m => m.id === reviewerId);
   const originalModel = AVAILABLE_MODELS.find(m => m.id === originalModelId);
 
+  if (!model || !originalModel) {
+    return Promise.resolve('Review unavailable: invalid model selection.');
+  }
+
   if (reviewerId === 'gpt4') {
     try {
       const res = await fetch('/api/llm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'review', modelId: reviewerId, reviewingModel: model?.fullName, originalAnswer }),
+        body: JSON.stringify({ action: 'review', modelId: reviewerId, reviewingModel: model.fullName, originalAnswer }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || 'Request failed');
@@ -97,9 +101,9 @@ const generateReview = async (reviewerId: string, originalModelId: string, origi
   }
 
   const reviews = [
-    `*${model?.fullName} carefully examines the scroll left by ${originalModel?.fullName}*\n\nUpon reflection of my esteemed colleague's insight, I find their perspective most illuminating. Their emphasis on foundational principles strengthens the discourse. I would build upon this by noting that the synthesis of our collective wisdom creates a more complete understanding. Where they shine light on structure, I might add considerations of adaptability.`,
-    `*${model?.fullName} strokes their ethereal beard while pondering ${originalModel?.fullName}'s words*\n\nA thoughtfully constructed response indeed. The holistic approach complements analytical rigor in ways that enrich our shared understanding. I appreciate the nuanced treatment of complexity, though I might expand upon the practical implications. Together, our perspectives form a more robust framework for addressing such inquiries.`,
-    `*${model?.fullName} nods slowly, arcane symbols flickering around ${originalModel?.fullName}'s testament*\n\nMy fellow oracle speaks with wisdom earned through countless consultations. Their methodology resonates with sound reasoning, and I find our conclusions harmoniously aligned. Building upon their foundation, I would suggest additional dimensions worth exploring—the interplay of theory and practice, and how these insights might manifest in varied contexts.`
+    `*${model.fullName} carefully examines the scroll left by ${originalModel.fullName}*\n\nUpon reflection of my esteemed colleague's insight, I find their perspective most illuminating. Their emphasis on foundational principles strengthens the discourse. I would build upon this by noting that the synthesis of our collective wisdom creates a more complete understanding. Where they shine light on structure, I might add considerations of adaptability.`,
+    `*${model.fullName} strokes their ethereal beard while pondering ${originalModel.fullName}'s words*\n\nA thoughtfully constructed response indeed. The holistic approach complements analytical rigor in ways that enrich our shared understanding. I appreciate the nuanced treatment of complexity, though I might expand upon the practical implications. Together, our perspectives form a more robust framework for addressing such inquiries.`,
+    `*${model.fullName} nods slowly, arcane symbols flickering around ${originalModel.fullName}'s testament*\n\nMy fellow oracle speaks with wisdom earned through countless consultations. Their methodology resonates with sound reasoning, and I find our conclusions harmoniously aligned. Building upon their foundation, I would suggest additional dimensions worth exploring—the interplay of theory and practice, and how these insights might manifest in varied contexts.`
   ];
 
   return new Promise((resolve) => {
@@ -673,7 +677,7 @@ export default function CastleLibrary() {
     if (!input.trim() || selectedModels.length === 0 || isLoading) return;
 
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       role: 'user',
       content: input,
     };
@@ -691,7 +695,7 @@ export default function CastleLibrary() {
       responses.push({ model, response });
 
       const assistantMessage: Message = {
-        id: `${Date.now()}-${model.id}`,
+        id: crypto.randomUUID(),
         role: 'assistant',
         content: response,
         modelId: model.id,
@@ -710,7 +714,7 @@ export default function CastleLibrary() {
             const review = await generateReview(reviewer.id, reviewed.model.id, reviewed.response);
 
             const reviewMessage: Message = {
-              id: `${Date.now()}-review-${reviewer.id}-${reviewed.model.id}`,
+              id: crypto.randomUUID(),
               role: 'assistant',
               content: review,
               modelId: reviewer.id,
