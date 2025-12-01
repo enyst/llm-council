@@ -1,0 +1,12 @@
+# Global
+.DS_Store
+.env
+.env.local
+
+# Castle app
+castle/.env.local
+castle/.next/
+castle/node_modules/
+castle/out/
+castle/npm-debug.log*
+castle/yarn-error.log
