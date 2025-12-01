@@ -67,7 +67,10 @@ def call_llm(model: dict, prompt: str) -> dict:
                 timeout=60,
             )
             data = resp.json()
-            text = data.get('choices', [{}])[0].get('message', {}).get('content')
+            choices = data.get('choices') or []
+            text = None
+            if choices:
+                text = choices[0].get('message', {}).get('content')
             if not text:
                 text = json.dumps(data)[:500]
             return {'role': 'assistant', 'content': text}
