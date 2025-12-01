@@ -364,7 +364,7 @@ const BookOnShelf: React.FC<{
 
 const ReadingDesk: React.FC<{
   selectedModels: Model[];
-  onRemove: (id: string) => void;
+  onRemove: (model: Model) => void;
 }> = ({ selectedModels, onRemove }) => {
   return (
     <div className="relative mt-8">
@@ -419,7 +419,7 @@ const ReadingDesk: React.FC<{
                 style={{
                   animation: `slideUp 0.5s ease-out ${index * 100}ms backwards`,
                 }}
-                onClick={() => onRemove(model.id)}
+                onClick={() => onRemove(model)}
               >
                 {/* Open book */}
                 <div
@@ -858,7 +858,7 @@ export default function CastleLibrary() {
             {/* Reading Desk */}
             <ReadingDesk
               selectedModels={selectedModels}
-              onRemove={(id) => toggleModel(AVAILABLE_MODELS.find((m) => m.id === id)!)}
+              onRemove={toggleModel}
             />
           </div>
         </section>
