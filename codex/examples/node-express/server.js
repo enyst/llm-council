@@ -88,7 +88,7 @@ async function callLLM(model, prompt) {
 }
 
 function buildReviewPrompt(question, answers) {
-  const maxAnswerLength = 500; // basic guard to avoid huge prompts
+  const maxAnswerLength = 10000; // allow longer excerpts while keeping a guard
   const block = answers
     .map(a => `- ${a.model.name}:\n${(a.text || '').slice(0, maxAnswerLength)}${(a.text || '').length > maxAnswerLength ? '...' : ''}`)
     .join('\n\n');
