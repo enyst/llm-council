@@ -8,7 +8,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__, static_folder='public', static_url_path='')
-CORS(app, resources={r"*": {"origins": "*"}})
+ALLOWED_ORIGINS = os.environ.get('ALLOWED_ORIGINS', '*')
+if ALLOWED_ORIGINS.strip() == '*':
+    CORS(app, resources={r"*": {"origins": "*"}})
+else:
+    origins = [o.strip() for o in ALLOWED_ORIGINS.split(',') if o.strip()]
+    CORS(app, resources={r"*": {"origins": origins}})
 
 PORT = int(os.environ.get('PORT', '12000'))
 
@@ -144,6 +149,8 @@ def ask():
         return jsonify({'error': 'question and modelIds[] required'}), 400
 
     active = [m for m in MODELS if m['id'] in model_ids]
+    if not active:
+        return jsonify({'error': 'no valid models found'}), 400
 
     # Phase 1: answers
     answers = []

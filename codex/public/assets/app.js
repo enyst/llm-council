@@ -5,8 +5,15 @@ const state = {
 };
 
 async function fetchModels() {
-  const res = await fetch('/api/models');
-  state.models = await res.json();
+  try {
+    const res = await fetch('/api/models');
+    if (!res.ok) throw new Error(`GET /api/models ${res.status}`);
+    state.models = await res.json();
+  } catch (e) {
+    console.error('Failed to fetch models', e);
+    state.models = [];
+    alert('Failed to load models. Please retry.');
+  }
   renderShelf();
   renderSeats();
   renderRegistry();
@@ -97,15 +104,20 @@ async function askCouncil() {
   document.getElementById('question-display').textContent = 'The tomes are consulting…';
   document.getElementById('answers-grid').innerHTML = '';
 
-  const res = await fetch('/api/ask', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ question: q, modelIds })
-  });
-  const data = await res.json();
-
-  state.history.unshift({ question: q, ...data, timestamp: Date.now() });
-  renderAnswers(data);
+  try {
+    const res = await fetch('/api/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: q, modelIds })
+    });
+    if (!res.ok) throw new Error(`POST /api/ask ${res.status}`);
+    const data = await res.json();
+    state.history.unshift({ question: q, ...data, timestamp: Date.now() });
+    renderAnswers(data);
+  } catch (e) {
+    console.error('Ask failed', e);
+    document.getElementById('question-display').textContent = 'The council is silent. Please try again.';
+  }
 }
 
 function renderAnswers(data) {
@@ -199,12 +211,18 @@ async function saveModel(e) {
   e.preventDefault();
   const fd = new FormData(e.currentTarget);
   const payload = Object.fromEntries(fd.entries());
-  const res = await fetch('/api/models', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-  const data = await res.json();
-  state.models = data.models;
-  renderShelf();
-  renderSeats();
-  renderRegistry();
+  try {
+    const res = await fetch('/api/models', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    if (!res.ok) throw new Error(`POST /api/models ${res.status}`);
+    const data = await res.json();
+    state.models = data.models;
+    renderShelf();
+    renderSeats();
+    renderRegistry();
+  } catch (e) {
+    console.error('Save model failed', e);
+    alert('Could not save tome. Check fields and try again.');
+  }
 }
 
 function wireNav() {
