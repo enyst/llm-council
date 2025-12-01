@@ -48,7 +48,22 @@ const AVAILABLE_MODELS: Model[] = [
   }
 ];
 
-const generateResponse = (modelId: string, question: string): Promise<string> => {
+const generateResponse = async (modelId: string, question: string): Promise<string> => {
+  if (modelId === 'gpt4') {
+    try {
+      const res = await fetch('/api/llm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'answer', modelId, question }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || 'Request failed');
+      return data.content || '';
+    } catch (e: any) {
+      return `OpenAI error: ${e?.message || 'unknown error'}`;
+    }
+  }
+
   const responses: Record<string, string> = {
     claude: `*The ancient tome glows with warm amber light as wisdom flows forth*\n\nRegarding your inquiry: "${question.slice(0, 60)}${question.length > 60 ? '...' : ''}"\n\nI approach this matter with careful deliberation. The essence of your question touches upon fundamental principles that deserve thorough examination. Through my analysis, I find several key considerations worthy of reflection.\n\nFirst, we must acknowledge the complexity inherent in such matters. Second, the interplay of various factors creates a rich tapestry of possibilities. The path to understanding requires patience and an open mind to multiple perspectives.`,
     gpt4: `*Emerald light flickers within the crystal orb as knowledge awakens*\n\nYour question about "${question.slice(0, 60)}${question.length > 60 ? '...' : ''}" draws upon diverse realms of knowledge.\n\nAllow me to illuminate this matter from multiple angles. The subject at hand presents fascinating dimensions worth exploring. From a practical standpoint, we can identify core principles that may guide our understanding.\n\nThe synthesis of these elements reveals patterns and insights that speak to both the immediate concern and broader implications for how we approach such inquiries.`,
@@ -62,9 +77,24 @@ const generateResponse = (modelId: string, question: string): Promise<string> =>
   });
 };
 
-const generateReview = (reviewerId: string, originalModelId: string): Promise<string> => {
+const generateReview = async (reviewerId: string, originalModelId: string, originalAnswer: string): Promise<string> => {
   const model = AVAILABLE_MODELS.find(m => m.id === reviewerId);
   const originalModel = AVAILABLE_MODELS.find(m => m.id === originalModelId);
+
+  if (reviewerId === 'gpt4') {
+    try {
+      const res = await fetch('/api/llm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'review', modelId: reviewerId, reviewingModel: model?.fullName, originalAnswer }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || 'Request failed');
+      return data.content || '';
+    } catch (e: any) {
+      return `OpenAI review error: ${e?.message || 'unknown error'}`;
+    }
+  }
 
   const reviews = [
     `*${model?.fullName} carefully examines the scroll left by ${originalModel?.fullName}*\n\nUpon reflection of my esteemed colleague's insight, I find their perspective most illuminating. Their emphasis on foundational principles strengthens the discourse. I would build upon this by noting that the synthesis of our collective wisdom creates a more complete understanding. Where they shine light on structure, I might add considerations of adaptability.`,
@@ -677,7 +707,7 @@ export default function CastleLibrary() {
         for (const reviewed of responses) {
           if (reviewer.id !== reviewed.model.id) {
             setLoadingState({ model: reviewer.fullName, isReview: true });
-            const review = await generateReview(reviewer.id, reviewed.model.id);
+            const review = await generateReview(reviewer.id, reviewed.model.id, reviewed.response);
 
             const reviewMessage: Message = {
               id: `${Date.now()}-review-${reviewer.id}-${reviewed.model.id}`,
