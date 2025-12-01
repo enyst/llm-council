@@ -88,7 +88,10 @@ async function callLLM(model, prompt) {
 }
 
 function buildReviewPrompt(question, answers) {
-  const block = answers.map(a => `- ${a.model.name}:\n${a.text}`).join('\n\n');
+  const maxAnswerLength = 500; // basic guard to avoid huge prompts
+  const block = answers
+    .map(a => `- ${a.model.name}:\n${(a.text || '').slice(0, maxAnswerLength)}${(a.text || '').length > maxAnswerLength ? '...' : ''}`)
+    .join('\n\n');
   return `You are part of a council reviewing answers.\nQuestion: ${question}\n\nHere are the other answers to review:\n${block}\n\nCritique each answer for correctness, missing points, contradictions, and improvements. Then give a short overall consensus.`;
 }
 

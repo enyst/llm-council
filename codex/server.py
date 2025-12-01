@@ -71,9 +71,17 @@ def call_llm(model: dict, prompt: str) -> dict:
             if not text:
                 text = json.dumps(data)[:500]
             return {'role': 'assistant', 'content': text}
-    except Exception as e:
+        else:
+            return {
+                'role': 'assistant',
+                'content': f"[{model['name']}] {prompt[:200]}\n\n— Provider '{model.get('provider')}' not yet implemented or missing API key.",
+            }
+    except requests.RequestException as e:
         print('LLM call error:', e)
-    return {'role': 'assistant', 'content': f"[{model['name']}] {prompt[:200]}\n\n— (mocked)"}
+        return {'role': 'assistant', 'content': f"[{model['name']}] {prompt[:200]}\n\n— (mocked)"}
+    except (KeyError, json.JSONDecodeError) as e:
+        print('LLM response parse error:', e)
+        return {'role': 'assistant', 'content': f"[{model['name']}] {prompt[:200]}\n\n— (mocked)"}
 
 
 def build_review_prompt(question: str, answers: list) -> str:

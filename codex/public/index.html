@@ -42,28 +42,28 @@
           <h2>Archivist’s Ledger</h2>
           <form id="model-form">
             <div class="row">
-              <label>ID</label>
-              <input name="id" required placeholder="scholar" />
+              <label for="model-id">ID</label>
+              <input id="model-id" name="id" required placeholder="scholar" />
             </div>
             <div class="row">
-              <label>Name</label>
-              <input name="name" required placeholder="The Scholar" />
+              <label for="model-name">Name</label>
+              <input id="model-name" name="name" required placeholder="The Scholar" />
             </div>
             <div class="row">
-              <label>Provider</label>
-              <input name="provider" placeholder="openai | anthropic | litellm" />
+              <label for="model-provider">Provider</label>
+              <input id="model-provider" name="provider" placeholder="openai | anthropic | litellm" />
             </div>
             <div class="row">
-              <label>Model</label>
-              <input name="model" placeholder="gpt-4o-mini" />
+              <label for="model-model">Model</label>
+              <input id="model-model" name="model" placeholder="gpt-4o-mini" />
             </div>
             <div class="row">
-              <label>Color</label>
-              <input name="color" type="color" value="#4a6fa5" />
+              <label for="model-color">Color</label>
+              <input id="model-color" name="color" type="color" value="#4a6fa5" />
             </div>
             <div class="row">
-              <label>Persona</label>
-              <textarea name="persona" rows="3" placeholder="You are a patient medieval scholar..."></textarea>
+              <label for="model-persona">Persona</label>
+              <textarea id="model-persona" name="persona" rows="3" placeholder="You are a patient medieval scholar..."></textarea>
             </div>
             <div class="row">
               <button type="submit">Save Tome</button>
