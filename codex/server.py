@@ -117,7 +117,7 @@ def upsert_model():
 
 @app.post('/api/ask')
 def ask():
-    data = request.get_json(force=True, silent=True) or {}
+    data = request.json or {}
     question = data.get('question')
     model_ids = data.get('modelIds') or []
     if not question or not isinstance(model_ids, list) or not model_ids:
