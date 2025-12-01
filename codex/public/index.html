@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The High Library — LLM Council</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="logo">The High Library</div>
+      <nav class="nav">
+        <button data-view="consultation" class="nav-btn active">Consultation Hall</button>
+        <button data-view="archivist" class="nav-btn">Archivist’s Study</button>
+      </nav>
+    </header>
+
+    <main class="main">
+      <aside class="stacks view consultation-view" id="stacks">
+        <h2 class="stacks-title">The Stacks</h2>
+        <ul class="model-shelf" id="model-shelf"></ul>
+      </aside>
+
+      <section class="council view consultation-view" id="council">
+        <div class="table-area">
+          <div class="table-graphic" id="table-graphic"></div>
+        </div>
+        <section class="conversation">
+          <div class="question-display" id="question-display"></div>
+          <div class="answers-grid" id="answers-grid"></div>
+        </section>
+      </section>
+
+      <section class="archivist view" id="archivist" hidden>
+        <div class="registry">
+          <h2>Registry of Tomes</h2>
+          <ul id="registry-list"></ul>
+        </div>
+        <div class="editor">
+          <h2>Archivist’s Ledger</h2>
+          <form id="model-form">
+            <div class="row">
+              <label>ID</label>
+              <input name="id" required placeholder="scholar" />
+            </div>
+            <div class="row">
+              <label>Name</label>
+              <input name="name" required placeholder="The Scholar" />
+            </div>
+            <div class="row">
+              <label>Provider</label>
+              <input name="provider" placeholder="openai | anthropic | litellm" />
+            </div>
+            <div class="row">
+              <label>Model</label>
+              <input name="model" placeholder="gpt-4o-mini" />
+            </div>
+            <div class="row">
+              <label>Color</label>
+              <input name="color" type="color" value="#4a6fa5" />
+            </div>
+            <div class="row">
+              <label>Persona</label>
+              <textarea name="persona" rows="3" placeholder="You are a patient medieval scholar..."></textarea>
+            </div>
+            <div class="row">
+              <button type="submit">Save Tome</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="question-bar consultation-view">
+      <button class="history-btn" id="history-btn">History</button>
+      <textarea class="question-input" id="question-input" placeholder="Pose your question to the Council..."></textarea>
+      <button class="ask-btn" id="ask-btn">Ask the Council ▶</button>
+    </footer>
+  </div>
+
+  <script type="module" src="/assets/app.js"></script>
+</body>
+</html>
