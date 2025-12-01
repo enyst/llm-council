@@ -20,6 +20,3 @@ Environment
 - OPENAI_API_KEY optional (for real OpenAI answers); otherwise responses are mocked
 - PORT (default 12000)
 - ALLOWED_ORIGINS (see CORS section)
-
-Optional examples
-- examples/node-express: Node/Express variant of the backend (not used by default)
