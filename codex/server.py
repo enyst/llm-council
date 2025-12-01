@@ -85,7 +85,16 @@ def call_llm(model: dict, prompt: str) -> dict:
 
 
 def build_review_prompt(question: str, answers: list) -> str:
-    block = '\n\n'.join([f"- {a['model']['name']}:\n{a['text']}" for a in answers])
+    max_len = 10000
+    parts = []
+    for a in answers:
+        name = a['model']['name']
+        text = a.get('text') or ''
+        snippet = text[:max_len]
+        if len(text) > max_len:
+            snippet += '...'
+        parts.append(f"- {name}:\n{snippet}")
+    block = '\n\n'.join(parts)
     return (
         "You are part of a council reviewing answers.\n"
         f"Question: {question}\n\n"
