@@ -93,10 +93,10 @@ def call_llm(model: dict, prompt: str) -> dict:
                 'content': f"[{model['name']}] {prompt[:200]}\n\n— Provider '{model.get('provider')}' not yet implemented or missing API key.",
             }
     except requests.RequestException as e:
-        print('LLM call error:', e)
+        app.logger.warning('LLM call error: %s', e)
         return {'role': 'assistant', 'content': f"[{model['name']}] {prompt[:200]}\n\n— (mocked)"}
     except (KeyError, json.JSONDecodeError) as e:
-        print('LLM response parse error:', e)
+        app.logger.warning('LLM response parse error: %s', e)
         return {'role': 'assistant', 'content': f"[{model['name']}] {prompt[:200]}\n\n— (mocked)"}
 
 

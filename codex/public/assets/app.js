@@ -142,6 +142,12 @@ function renderAnswers(data) {
 
     const footer = document.createElement('footer');
     footer.className = 'answer-footer';
+
+    const pop = document.createElement('div');
+    pop.className = 'margin-pop';
+    pop.hidden = true;
+    pop.textContent = buildNotesForAnswer(ans, data.reviews);
+
     const notesBtn = document.createElement('button');
     notesBtn.textContent = 'Council Notes';
     notesBtn.addEventListener('click', () => {
@@ -150,11 +156,6 @@ function renderAnswers(data) {
 
     const strips = document.createElement('div');
     strips.className = 'margin-strips';
-
-    const pop = document.createElement('div');
-    pop.className = 'margin-pop';
-    pop.hidden = true;
-    pop.textContent = buildNotesForAnswer(ans, data.reviews);
 
     footer.appendChild(notesBtn);
 
