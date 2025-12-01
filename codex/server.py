@@ -16,12 +16,12 @@ DEFAULT_ORIGINS = [
 ]
 allowed_cfg = os.environ.get('ALLOWED_ORIGINS')
 if not allowed_cfg:
-    CORS(app, resources={r"*": {"origins": DEFAULT_ORIGINS}})
+    CORS(app, resources={r"/api/*": {"origins": DEFAULT_ORIGINS}})
 elif allowed_cfg.strip() == '*':
-    CORS(app, resources={r"*": {"origins": "*"}})
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
 else:
     origins = [o.strip() for o in allowed_cfg.split(',') if o.strip()]
-    CORS(app, resources={r"*": {"origins": origins or DEFAULT_ORIGINS}})
+    CORS(app, resources={r"/api/*": {"origins": origins or DEFAULT_ORIGINS}})
 
 PORT = int(os.environ.get('PORT', '12000'))
 
