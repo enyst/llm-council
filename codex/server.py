@@ -8,12 +8,20 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__, static_folder='public', static_url_path='')
-ALLOWED_ORIGINS = os.environ.get('ALLOWED_ORIGINS', '*')
-if ALLOWED_ORIGINS.strip() == '*':
+DEFAULT_ORIGINS = [
+    'http://localhost:12000',
+    'http://127.0.0.1:12000',
+    'https://work-1-kbdzgmricarifzhe.prod-runtime.all-hands.dev',
+    'https://work-2-kbdzgmricarifzhe.prod-runtime.all-hands.dev',
+]
+allowed_cfg = os.environ.get('ALLOWED_ORIGINS')
+if not allowed_cfg:
+    CORS(app, resources={r"*": {"origins": DEFAULT_ORIGINS}})
+elif allowed_cfg.strip() == '*':
     CORS(app, resources={r"*": {"origins": "*"}})
 else:
-    origins = [o.strip() for o in ALLOWED_ORIGINS.split(',') if o.strip()]
-    CORS(app, resources={r"*": {"origins": origins}})
+    origins = [o.strip() for o in allowed_cfg.split(',') if o.strip()]
+    CORS(app, resources={r"*": {"origins": origins or DEFAULT_ORIGINS}})
 
 PORT = int(os.environ.get('PORT', '12000'))
 
