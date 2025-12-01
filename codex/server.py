@@ -94,7 +94,7 @@ def get_models():
 
 @app.post('/api/models')
 def upsert_model():
-    data = request.get_json(force=True, silent=True) or {}
+    data = request.json or {}
     mid = data.get('id')
     name = data.get('name')
     if not mid or not name:
