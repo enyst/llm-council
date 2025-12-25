@@ -959,7 +959,7 @@ export default function CastleLibrary() {
                       : "Inscribe your question upon this parchment... (Enter to send)"
                   }
                   disabled={selectedModels.length === 0 || isLoading}
-                  className="w-full h-24 p-4 rounded-lg border-2 border-amber-700 font-serif text-stone-800 placeholder-stone-500 resize-none focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="w-full h-24 p-4 rounded-lg border-2 border-amber-700 font-serif text-stone-800 placeholder-stone-500 resize-none focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   style={{
                     background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fef3c7 100%)',
                   }}
@@ -979,7 +979,7 @@ export default function CastleLibrary() {
               <button
                 onClick={handleSubmit}
                 disabled={selectedModels.length === 0 || !input.trim() || isLoading}
-                className="px-8 py-4 rounded-lg border-2 font-serif text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+                className="px-8 py-4 rounded-lg border-2 font-serif text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-400"
                 style={{
                   background: selectedModels.length === 0 || !input.trim() || isLoading
                     ? 'linear-gradient(180deg, #44403c 0%, #292524 100%)'
